@@ -54,6 +54,17 @@ M_THEME_COLOR = '#22272e'
 
 
 PLUGIN_PATHS = ['m.css/plugins']
-PLUGINS = ['m.htmlsanity']
+PLUGINS = ['m.htmlsanity', 'm.components']
 # Favicon configuration through m.css
 M_FAVICON = ('extra/favicon.ico', 'image/x-ico')
+
+# Landing site
+FORMATTED_FIELDS = ['landing']
+
+# Logo and fine print footer
+M_SITE_LOGO = 'extra/logo.png'
+M_FINE_PRINT = SITENAME + """. Powered by `Pelican <https://getpelican.com>`_
+and `m.css <https://mcss.mosra.cz>`_.
+The cover used is modified from an 
+`illustration <https://biodiversitylibrary.org/page/1634269>`_ of 
+the Biodiversity Heritage Library. """
