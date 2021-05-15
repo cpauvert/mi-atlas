@@ -37,3 +37,7 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Pelican python cache directories
+docs/__pycache__
+docs/m/__pycache__
