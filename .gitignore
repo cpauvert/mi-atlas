@@ -41,3 +41,4 @@ vignettes/*.pdf
 # Pelican python cache directories
 docs/__pycache__
 docs/m/__pycache__
+docs/m.css/__pycache__
