@@ -35,7 +35,6 @@ DEFAULT_PAGINATION = False
 
 # Add paths for extra
 STATIC_PATHS = ["extra"]
-EXTRA_PATH_METADATA = { 'extra/favicon.ico': {'path': 'favicon.ico'} }
 
 # Disable unwanted features for the moment
 TAGS_SAVE_AS = ''
@@ -56,3 +55,5 @@ M_THEME_COLOR = '#22272e'
 
 PLUGIN_PATHS = ['m.css/plugins']
 PLUGINS = ['m.htmlsanity']
+# Favicon configuration through m.css
+M_FAVICON = ('extra/favicon.ico', 'image/x-ico')
