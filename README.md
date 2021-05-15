@@ -1,4 +1,4 @@
-# mi-atlas: a Microbial Interactions Atlas <img src="logo.png" align="right" width="155" height="179"/>
+# mi-atlas: a Microbial Interactions Atlas <img src="docs/content/extra/logo.png" align="right" width="155" height="179"/>
 
 ## Rationale
 

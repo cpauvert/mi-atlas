@@ -14,7 +14,7 @@ A microbial interactions catalog
 
                 <h1>mi-atlas</h1>
 
-            The project `*mi-atlas* <https://github.com/cpauvert/mi-atlas>`_ aims to provide an interactive and evolving catalog of microbial interactions based on a framework developed by `Pachero and Segrè <https://doi.org/10.1093/femsle/fnz125>`_.
+            The project `mi-atlas <https://github.com/cpauvert/mi-atlas>`_ aims to provide an interactive and evolving catalog of microbial interactions based on a framework developed by `Pachero and Segrè <https://doi.org/10.1093/femsle/fnz125>`_.
                  
     .. container:: m-row 
 
