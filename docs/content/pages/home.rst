@@ -32,9 +32,9 @@ A microbial interactions catalog
 
             .. block-info:: Visualize the atlas
 
-                Microbial interactions entries can be browsed interactively in the Shiny application accessible below (soon).
+                Microbial interactions entries can be browsed (for now) using Github rendering of .tsv data.
 
-                .. button-info:: #
+                .. button-info:: https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv
 
                     Explore!
 
@@ -44,6 +44,6 @@ A microbial interactions catalog
 
                 Follow the link below to discover how you can help improve the atlas with new entries or corrections.
 
-                .. button-success:: #
+                .. button-success:: https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md
 
                     I want to help! 
