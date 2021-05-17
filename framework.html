@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>A framework to describe microbial interactions | mi-atlas</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://cpauvert.github.io/mi-atlas/static/m-dark.compiled.css" />
+  <link rel="icon" href="https://cpauvert.github.io/mi-atlas/extra/favicon.ico" type="image/x-ico" />
+  <link rel="canonical" href="https://cpauvert.github.io/mi-atlas/pages/a-framework-to-describe-microbial-interactions.html" />
+  <link href="https://cpauvert.github.io/mi-atlas/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mi-atlas" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="mi-atlas" />
+  <meta property="og:title" content="A framework to describe microbial interactions" />
+  <meta name="twitter:title" content="A framework to describe microbial interactions" />
+  <meta property="og:url" content="https://cpauvert.github.io/mi-atlas/pages/a-framework-to-describe-microbial-interactions.html" />
+  <meta property="og:description" content="A description of the framework to catalog microbial interactions" />
+  <meta name="twitter:description" content="A description of the framework to catalog microbial interactions" />
+  <meta property="og:image" content="https://cpauvert.github.io/mi-atlas/extra/cover.jpg" />
+  <meta name="twitter:image" content="https://cpauvert.github.io/mi-atlas/extra/cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:type" content="page" />
+</head>
+<body>
+<header><nav id="navigation" class="m-navbar-cover">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="https://cpauvert.github.io/mi-atlas/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m"><img src="https://cpauvert.github.io/mi-atlas/extra/logo.png" alt="" />mi-atlas</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://cpauvert.github.io/mi-atlas/framework.html">Framework</a></li>
+            <li><a href="https://github.com/cpauvert/mi-atlas">Github</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div id="m-cover-image" style="background-image: url('https://cpauvert.github.io/mi-atlas/extra/cover.jpg');"><div></div></div>
+<article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>A framework to describe microbial interactions</h1>
+<!-- content -->
+<figure>
+<img alt="A graphical abstract illustrating the encoding process" src="https://cpauvert.github.io/mi-atlas/extra/framework-abstract.png" />
+<figcaption>From a microbial interaction (left) between two bacteria (green and blue), questions (center) are asked within the framework to help encode the interaction into a set of binary attributes and further stored in the catalog (right).</figcaption>
+</figure>
+<p>Microorganisms engage in interactions in all environments. However the specifics of what participants are involved, where exactly it happens, what compounds are involved, how much such niceties cost to each partner are hard to unravel and comprehend.</p>
+<p>Following a long-standing tradition of classification in biology, <a href="https://doi.org/10.1093/femsle/fnz125">Pacheco and Segrè (2019)</a> innovated by suggesting a framework to systematically partition microbial interactions that goes beyond the outcomes of the participants.</p>
+<p>While probably no framework would fit the ever-changing and full of exceptions world of microbes, the framework used here attempt to convert studied microbial interactions into encoded attributes for ease in exploration, comparison and future quantitative analyses.
+Encoding a microbial interations between 2 or 3 participants boils down to answering the following <strong>nine questions</strong>.</p>
+<aside class="m-block m-success">
+<h3>Nine questions to encode a microbial interaction</h3>
+<ol>
+<li>What are the <strong>names</strong> of the microorganisms involved? (usually easy)</li>
+<li>What is the <strong>taxonomic resolution</strong> at which the interaction was studied and which <strong>domain of life</strong> are involved?</li>
+<li>Is the mechanism of the studied interaction <strong>specific</strong>?</li>
+<li>Is there a documented <strong>cost</strong> of engaging in the interaction and does it differ between participants?</li>
+<li>What are the ecological <strong>outcomes</strong> for each participant?</li>
+<li>Is the interaction documented to <strong>depend</strong> on physical contact, time or space?</li>
+<li>What is the <strong>site</strong> of the mechanism of interaction at the cellular level?</li>
+<li>What is the <strong>biome</strong> where the interaction take place?</li>
+<li>What type of <strong>compounds</strong> are involved?</li>
+</ol>
+</aside>
+<aside class="m-note m-warning">
+Uncertainties or unknown in some of these questions can be encoded with <code>NA</code> values.</aside>
+<aside class="m-note m-danger">
+Answers to the questions of the framework are to be supported by peer-reviewed literature. References to relevant articles are then included along the catalog entry.</aside>
+<p>For more details on the framework definitions, have a look at the <a href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions">README</a> on the projec repository and the original <a href="https://doi.org/10.1093/femsle/fnz125">article</a>.</p>
+<!-- /content -->
+      </div>
+    </div>
+  </div>
+</article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>mi-atlas. Powered by <a href="https://getpelican.com">Pelican</a>
+        and <a href="https://mcss.mosra.cz">m.css</a>.
+        The cover used is modified from an
+        <a href="https://biodiversitylibrary.org/page/1634269">illustration</a> of
+        the Biodiversity Heritage Library.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
