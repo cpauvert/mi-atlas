@@ -68,3 +68,7 @@ and `m.css <https://mcss.mosra.cz>`_.
 The cover used is modified from an 
 `illustration <https://biodiversitylibrary.org/page/1634269>`_ of 
 the Biodiversity Heritage Library. """
+
+# Top Navbar
+M_LINKS_NAVBAR1 = [('Framework', 'framework.html', '', []),
+                  ('Github', 'https://github.com/cpauvert/mi-atlas', '', [])]
