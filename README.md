@@ -9,6 +9,46 @@ Therefore, [mi-atlas](https://github.com/cpauvert/mi-atlas) (pronounced `/'mi at
 1. propose an interactive exploration of the catalog and
 2. enable versioned community contributions to the microbial interactions catalog
 
+## Attributes of microbial interactions
+
+### Attributes formatting and encoding
+
+The attributes definitions are adapted from the Table 1 of ([Pacheco and Segrè, 2019](https://doi.org/10.1093/femsle/fnz125)) and can be read as follows:
+
+> **Attribute type** Definition of the attribute. *Quantification of the attribute*.
+
+The encoding of each of the attributes is described in the following table:
+
+
+| **Encoding** |  **Binary** | **Ternary** |
+|:------------:|:-----------:|:-----------:|
+|      `0`     | Not present |   Neutral   |
+|      `1`     |   Present   |  Beneficial |
+|     `NA`     |   Unknown   |   Unknown   |
+|     `-1`     |             | Detrimental |
+
+
+### Attributes list
+
+**Specificity**. The reported mechanism of interaction is deployed in a manner specific to the recipient (e.g. signaling molecules specific to one species vs. nonspecific secretion of waste products). *Binary*.
+
+**Cost**. Establishment of the reported interaction (e.g. secretion of a metabolite) imposes a fitness burden on an organism involved (i.e. the individual fitness/growth rate of the organism would initially have been greater had it not established the interaction). *Binary*.
+
+**Ecological outcome**. The ultimate ecological effect the interaction confers on each participant. Combining these values for both participants in a pairwise interaction yields its overall ecological outcome (e.g. 1,-1 corresponds to selfishness; 1,1 corresponds to mutualism, etc.). *Ternary*.
+
+**Contact dependence**. Interaction is reported to occur only if direct physical contact between the different species is present. *Binary*.
+
+**Time dependence**. Interaction is reported to occur only in a specific temporal frame (e.g. occurring only at one point in a circadian cycle). *Binary*.
+
+**Spatial dependence**. Interaction is reported to occur only if organisms are in a specific spatial configuration. *Binary*.
+
+**Site** The site, relative to the microbes involved, in which the interaction is reported to take place: extracellular (e.g. signaling molecule release or metabolic exchange), membrane (e.g. protein docking or conjugation), or cytoplasm (e.g. direct predation). *Binary value for each site*.
+
+**Habitat** The biome(s) in which the interaction or participating organisms have been observed: aquatic, biofilm, food product, multicellular host, soil, synthetic, or ubiquitous. *Binary value for each habitat*.
+
+**Compounds involved** The type of molecule that mediates the interaction: small molecules (e.g. carbohydrates or metabolic intermediates, but not secondary metabolites), nucleic acids (e.g. DNA), peptides (e.g. amino acids), or secondary metabolites (e.g. quorum sensing molecules). *Binary value for each compound type*.
+
+
 ## Contributing
 
 Contributions to the catalog in the form of corrections and/or new entries are welcome and possible. If you are interested, please have a look at the [CONTRIBUTING guidelines](CONTRIBUTING.md). 
