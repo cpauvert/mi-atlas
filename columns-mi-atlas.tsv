@@ -1,0 +1,12 @@
+Attribute type	Column name
+Interaction description	Interaction_number, Interaction_name
+Name of entities involved	Participant_1, Participant_2, Participant_3
+Taxonomic information	Taxonomic_resolution, Domain_1, Domain_2, Domain_3
+Specificity	Specificity
+Initial fitness cost	Cost_to_P1, Cost_to_P2, Cost_to_P3
+Ecological outcomes	Outcome_for_P1, Outcome_for_P2, Outcome_for_P3
+Reported Dependencies	Contact_dependent, Time_dependent, Space_dependent
+Site	Cytoplasm, Membrane, Extracellular
+Habitat	Aquatic, Biofilm, Food_product, Multicellular_host, Soil, Synthetic, Ubiquitous
+Compounds involved	Small_molecules, Nucleic_acids, Peptides, Secondary_metabolites
+Bibliography as doi	References
