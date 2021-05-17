@@ -42,3 +42,6 @@ vignettes/*.pdf
 docs/__pycache__
 docs/m/__pycache__
 docs/m.css/__pycache__
+
+# Pelican content directory
+docs/output 
