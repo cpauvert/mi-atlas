@@ -2,7 +2,7 @@
 
 ## Description
 
-A framework was recently suggested to describe interactions occurring between microorganisms using the encoding of several (binary) features in order to build a catalog amenable to quantitative analyses ([Pacheco and Segrè, 2019](https://doi.org/10.1093/femsle/fnz125)).
+A framework was recently suggested to describe interactions occurring between microorganisms using the encoding of several *attributes* (see below for details) in order to build a catalog amenable to quantitative analyses ([Pacheco and Segrè, 2019](https://doi.org/10.1093/femsle/fnz125)).
 Their initial effort described 74 interactions which were unfortunately available only in the Supplementary Material section of the article.
 Therefore, [mi-atlas](https://github.com/cpauvert/mi-atlas) (pronounced `/'mi atlas/` like in Spanish) aims to:
 
@@ -48,6 +48,8 @@ The encoding of each of the attributes is described in the following table:
 
 **Compounds involved** The type of molecule that mediates the interaction: small molecules (e.g. carbohydrates or metabolic intermediates, but not secondary metabolites), nucleic acids (e.g. DNA), peptides (e.g. amino acids), or secondary metabolites (e.g. quorum sensing molecules). *Binary value for each compound type*.
 
+Beforehand, each interaction is also described with the scientific names of each participant, the taxonomic resolution (e.g. Genus - species) as well as the domain of each participant (Bacteria, Archaea, Eukarya, Viruses). 
+The exact names of the columns of the .tsv file are listed in the following [table](https://github.com/cpauvert/mi-atlas/blob/main/columns-mi-atlas.tsv) where they are grouped in the abovementioned categories.
 
 ## Contributing
 
