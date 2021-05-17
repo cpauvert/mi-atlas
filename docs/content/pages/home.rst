@@ -22,7 +22,7 @@ A microbial interactions catalog
 
             .. block-primary:: Download the atlas
 
-                The reformatted atlas is available as a tab-separated file (.tsv) and include doi references.
+                The reformatted atlas is available as a tab-separated file (.tsv) and include doi references (v0.1).
 
                 .. button-primary:: https://github.com/cpauvert/mi-atlas/raw/main/mi-atlas.tsv
 
