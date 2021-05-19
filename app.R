@@ -18,24 +18,30 @@ ui <- fluidPage(
     column(
       imageOutput("logo"),
       align = "center", alt = "Logo of mi-atlas", width = 1),
-    column(width = 2),
-    column(width = 6,
-           h2("About", align = "center"),
-           p("Here is the list of interactions occuring between microorganisms that are documented",
-             "in the versioned catalog (see website).", "This classification is based on a framework",
-             "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125", 
+    column(width = 8, offset = 1,
+           fluidRow(
+             column(width = 6,
+                    h2("About", align = "center"),
+                    p("Here is the list of interactions occuring between microorganisms that are documented",
+                      "in the versioned catalog (see website).", "This classification is based on a framework",
+                      "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125",
+                                        target = "_blank", rel = "noreferrer noopener",
+                                        # open in new tab w/ protection
+                                        "(Pacheco and Segrè, 2019)."), align = "left")),
+             column(width = 6,
+                    h2("How to explore", align = "center"),
+                    p("Browse the list of microbial interactions below.",
+                      "Upon selection of a row, details of the interaction will be displayed",
+                      a(href = "#interaction-details", "below"),"the table."),
+                    helpText("Details on the column names can be found",
+                             a(href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions",
                                target = "_blank", rel = "noreferrer noopener",
                                # open in new tab w/ protection
-                               "(Pacheco and Segrè, 2019)."), align = "left"),
-           p("List of the microbial interactions in the catalog."),
-           helpText("Details on the column names can be found",
-                    a(href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions", 
-                      target = "_blank", rel = "noreferrer noopener",
-                      # open in new tab w/ protection
-                      "here."))
+                               "here."))
+                    )),
+           fluidRow(h2("List of the interactions", align = "center"), DT::dataTableOutput("table"))
     ),
-    column(width = 2),
-    column(align = "center", width = 1,
+    column(align = "center", width = 1, offset = 1,
       a(href="https://cpauvert.github.io/mi-atlas/framework.html",
         target = "_blank", rel = "noreferrer noopener",
         icon("book-open")), br(),
@@ -52,9 +58,11 @@ ui <- fluidPage(
       )
   ),
   fluidRow(
-    column(width = 2),
-    column(width = 8, DT::dataTableOutput("table")),
-    column(width = 2)
+    column(width = 8, offset = 2,
+           h2("Details on the interaction", textOutput("int_no", inline = T),
+              id="interaction-details", align = "center"),
+           h3(textOutput("int_name"), align = "center")
+           )
   )
 )
 
@@ -72,12 +80,20 @@ server <- function(input, output, session) {
   })
   output$table <- DT::renderDataTable(preview_atlas(),
                                       extensions = 'Responsive',
-                                      selection = 'single', 
+                                      selection = list(
+                                        mode = 'single',
+                                        selected = '7',
+                                        target = 'row'),
                                       options = list(
                                         autoWidth = TRUE
                                         )
   )
-  output$wd<-renderText(getwd())
+  output$int_no <- renderText({
+    paste0("#", input$table_rows_selected)
+  })
+  output$int_name <- renderText({
+    preview_atlas()[ input$table_rows_selected, "Interaction_name"]
+  })
 }
 
 # Run the application 
