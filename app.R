@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 library(dplyr)
 library(magrittr)
 library(DT)
@@ -12,6 +13,13 @@ if(!exists("mi_atlas")){
 ui <- fluidPage(
   lang = "en", 
   title = "mi-atlas",
+  theme = bs_theme( # Based on m.css dark theme
+    bg = "#22272e",
+    fg = "#ffffff",
+    primary = "#5b9dd9",#"#a5c9ea",
+    base_font = font_google("Source Sans Pro"),
+    code_font = font_google("Source Code Pro")
+  ),
   fluidRow(column(width = 12, align = "center",
                   h1("An interactive and evolving microbial interactions catalog"))),
   fluidRow(
@@ -21,7 +29,7 @@ ui <- fluidPage(
     column(width = 8, offset = 1,
            fluidRow(
              column(width = 6,
-                    h2("About", align = "center"),
+                    h2("About mi-atlas", align = "center"),
                     p("Here is the list of interactions occuring between microorganisms that are documented",
                       "in the versioned catalog (see website).", "This classification is based on a framework",
                       "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125",
@@ -39,7 +47,7 @@ ui <- fluidPage(
                                # open in new tab w/ protection
                                "here."))
                     )),
-           fluidRow(h2("List of the interactions", align = "center"), DT::dataTableOutput("table"))
+           fluidRow(h2("List of microbial interactions", align = "center"), DT::dataTableOutput("table"))
     ),
     column(align = "center", width = 1, offset = 1,
       a(href="https://cpauvert.github.io/mi-atlas/framework.html",
@@ -76,7 +84,9 @@ server <- function(input, output, session) {
   }, deleteFile = FALSE)
   preview_atlas <- reactive({
     mi_atlas %>% select(Interaction_name,
-                        Participant_1, Participant_2, Participant_3)
+                        Participant_1,
+                        Participant_2,
+                        Participant_3)
   })
   output$table <- DT::renderDataTable(preview_atlas(),
                                       extensions = 'Responsive',
@@ -84,9 +94,8 @@ server <- function(input, output, session) {
                                         mode = 'single',
                                         selected = '7',
                                         target = 'row'),
-                                      options = list(
-                                        autoWidth = TRUE
-                                        )
+                                      options = list(autoWidth = TRUE),
+                                      style = "bootstrap4"
   )
   output$int_no <- renderText({
     paste0("#", input$table_rows_selected)
