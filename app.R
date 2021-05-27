@@ -89,13 +89,19 @@ ui <- fluidPage(
     column(width = 8, offset = 2,
            h2("Details on the interaction", textOutput("int_no", inline = T),
               id="interaction-details", align = "center"),
-           h3(textOutput("int_name"), align = "center"),
+           h3("Interaction name:", textOutput("int_name", inline = T), align = "center"),
+           h4("Taxonomy and specificity"),
            tags$ul(
              tags$li(textOutput("int_tax")),
              tags$li(textOutput("int_specificity"))
            ),
-           h4("Interactions participants"),
-           column(width = 10, offset = 1, tableOutput("participant_table"))
+           h4("Interaction participants"),
+           column(width = 10, offset = 1, tableOutput("participant_table")),
+           h4("Interaction features"),
+           column(width = 3, tableOutput("dependencies_table")),
+           column(width = 3),
+           column(width = 3),
+           column(width = 3)
            )
   )
 )
@@ -183,6 +189,19 @@ server <- function(input, output, session) {
     }
     ptable
   }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  output$dependencies_table <- renderTable({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Assemble the table
+    ptable<-matrix(
+      data = unlist(selected_atlas()[c(
+        "Contact_dependent", "Time_dependent", "Space_dependent")]),
+      nrow = 3, ncol = 1, byrow = F)
+    # Add the questions as row.names
+    rownames(ptable) <- unlist(
+      unname(questions[c("Participant", "Domain","Cost", "Outcome")])
+    )
+  }, rownames = T, colnames = T, na = "", hover = T, spacing = "xs")
 }
 
 # Run the application 
