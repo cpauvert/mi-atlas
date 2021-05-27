@@ -4,9 +4,29 @@ library(dplyr)
 library(magrittr)
 library(DT)
 
+# Resources to be loaded
 if(!exists("mi_atlas")){
   mi_atlas <- read.table("mi-atlas.tsv", header = TRUE, sep = "\t",
                          stringsAsFactors = FALSE, row.names = 1)
+}
+
+if(!exists("decoding")){
+  decoding <- list(
+    "binary" = setNames(c("No", "Yes", "Unknown"), c("0","1","Unknown")),
+    "ternary" = setNames(c("Neutral", "Beneficial", "Unknown","Detrimental"),
+                         c("0","1","Unknown","-1"))
+  )
+}
+
+if(!exists("questions")){
+  questions <- list(
+    "Participant" = "What is the participant name?",
+    "Domain" = "From which domain of life?",
+    "Taxonomic_resolution" = "What is the taxonomic resolution of the interaction?",
+    "Specificity" = "Is the mechanism of interaction specific?",
+    "Cost" = "Is participation costly?",
+    "Outcome" = "What is the outcome?"
+  )
 }
 
 # Define UI
@@ -69,7 +89,13 @@ ui <- fluidPage(
     column(width = 8, offset = 2,
            h2("Details on the interaction", textOutput("int_no", inline = T),
               id="interaction-details", align = "center"),
-           h3(textOutput("int_name"), align = "center")
+           h3(textOutput("int_name"), align = "center"),
+           tags$ul(
+             tags$li(textOutput("int_tax")),
+             tags$li(textOutput("int_specificity"))
+           ),
+           h4("Interactions participants"),
+           column(width = 10, offset = 1, tableOutput("participant_table"))
            )
   )
 )
@@ -97,12 +123,66 @@ server <- function(input, output, session) {
                                       options = list(autoWidth = TRUE),
                                       style = "bootstrap4"
   )
+  selected_atlas <- reactive({
+    # Extraction
+    s_atlas <- as.list(mi_atlas[ input$table_rows_selected, ])
+    # Transform NA in Unknown
+    s_atlas[is.na(s_atlas)] <- "Unknown" # Otherwise no easy decoding
+    # Decode data by groups of column (binary/ternary)
+    for( foo in names(s_atlas)){
+      value <- as.character( s_atlas[[foo]] )
+      # Convert the ternary
+      if( foo %in% paste0(c("Outcome_for_P"), 1:3) ){
+        s_atlas[[foo]] <- unname(decoding[["ternary"]][ value ])
+      # Convert the binary
+      } else if( foo %in% c(
+        "Specificity",
+        "Cost_to_P1", "Cost_to_P2", "Cost_to_P3",
+        "Contact_dependent", "Time_dependent", "Space_dependent",
+        "Cytoplasm", "Membrane", "Extracellular", "Aquatic", "Biofilm",
+        "Food_product", "Multicellular_host", "Soil", "Synthetic", "Ubiquitous",
+        "Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites"
+      )){
+        s_atlas[[foo]] <- unname(decoding[["binary"]][ value ])
+      }
+    }
+    s_atlas
+  })
   output$int_no <- renderText({
     paste0("#", input$table_rows_selected)
   })
   output$int_name <- renderText({
     preview_atlas()[ input$table_rows_selected, "Interaction_name"]
   })
+  output$int_tax <- renderText({
+    paste0(questions[["Taxonomic_resolution"]]," ",
+          selected_atlas()[["Taxonomic_resolution"]],". ")
+  })
+  output$int_specificity <- renderText({
+    paste0(questions[["Specificity"]]," ",
+          selected_atlas()[["Specificity"]],".")
+  })
+  output$participant_table<-renderTable({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Assemble the table
+    ptable<-matrix(
+      data = unlist(selected_atlas()[c(
+        "Participant_1", "Domain_1","Cost_to_P1", "Outcome_for_P1",
+        "Participant_2", "Domain_2","Cost_to_P2", "Outcome_for_P2",
+        "Participant_3", "Domain_3","Cost_to_P3", "Outcome_for_P3")
+        ]),
+      nrow = 4, ncol = 3, byrow = F)
+      # Add the questions as row.names
+    rownames(ptable) <- unlist(
+      unname(questions[c("Participant", "Domain","Cost", "Outcome")])
+      )
+    # Drop the third participant column if its name is Unknown
+    if(selected_atlas()[["Participant_3"]] == "Unknown"){
+      ptable <- ptable[, -3]
+    }
+    ptable
+  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
 }
 
 # Run the application 
