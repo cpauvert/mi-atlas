@@ -1,7 +1,5 @@
 library(shiny)
 library(bslib)
-library(dplyr)
-library(magrittr)
 library(DT)
 
 # Resources to be loaded
@@ -135,10 +133,10 @@ server <- function(input, output, session) {
          alt = "Logo of mi-atlas")
   }, deleteFile = FALSE)
   preview_atlas <- reactive({
-    mi_atlas %>% select(Interaction_name,
-                        Participant_1,
-                        Participant_2,
-                        Participant_3)
+    mi_atlas[ , c("Interaction_name",
+                  "Participant_1",
+                  "Participant_2",
+                  "Participant_3")]
   })
   output$table <- DT::renderDataTable(preview_atlas(),
                                       extensions = 'Responsive',
