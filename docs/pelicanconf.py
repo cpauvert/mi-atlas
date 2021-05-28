@@ -71,4 +71,5 @@ the Biodiversity Heritage Library. """
 
 # Top Navbar
 M_LINKS_NAVBAR1 = [('Framework', 'framework.html', '', []),
-                  ('Github', 'https://github.com/cpauvert/mi-atlas', '', [])]
+                  ('Github', 'https://github.com/cpauvert/mi-atlas', '', []),
+                  ('Shiny', 'https://cpauvert.shinyapps.io/mi-atlas', '', [])]

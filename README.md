@@ -6,7 +6,7 @@ A framework was recently suggested to describe interactions occurring between mi
 Their initial effort described 74 interactions which were unfortunately available only in the Supplementary Material section of the article.
 Therefore, [mi-atlas](https://github.com/cpauvert/mi-atlas) (pronounced `/'mi atlas/` like in Spanish) aims to:
 
-1. propose an interactive exploration of the catalog and
+1. propose an [interactive exploration](https://cpauvert.shinyapps.io/mi-atlas) of the catalog and
 2. enable versioned community contributions to the microbial interactions catalog
 
 ## Attributes of microbial interactions
@@ -49,7 +49,7 @@ The encoding of each of the attributes is described in the following table:
 **Compounds involved** The type of molecule that mediates the interaction: small molecules (e.g. carbohydrates or metabolic intermediates, but not secondary metabolites), nucleic acids (e.g. DNA), peptides (e.g. amino acids), or secondary metabolites (e.g. quorum sensing molecules). *Binary value for each compound type*.
 
 Beforehand, each interaction is also described with the scientific names of each participant, the taxonomic resolution (e.g. Genus - species) as well as the domain of each participant (Bacteria, Archaea, Eukarya, Viruses). 
-The exact names of the columns of the .tsv file are listed in the following [table](https://github.com/cpauvert/mi-atlas/blob/main/columns-mi-atlas.tsv) where they are grouped in the abovementioned categories.
+The exact names of the columns of the .tsv file are listed in the following [table](https://github.com/cpauvert/mi-atlas/blob/main/columns-mi-atlas.tsv) where they are grouped in the aforementioned categories.
 
 ## Contributing
 
@@ -59,7 +59,7 @@ Contributions to the catalog in the form of corrections and/or new entries are w
 
 Several [milestones](https://github.com/cpauvert/mi-atlas/milestones) are already set for incremental improvements of the two aims of the project.
 
-*Spoiler alert*: a Shiny application will be used to render the multi-column catalog into human-readable entries upon selection of the interaction of interest. 
+*Spoiler alert*: a [Shiny application](https://cpauvert.shinyapps.io/mi-atlas) is now used to render the multi-column catalog into human-readable entries upon selection of the interaction of interest.
 In the future, a builder will be designed to ease the addition of a new entry to the catalog that follows the framework guidelines.
 And ideally new entries could be discussed and reviewed before acceptance using the [pull request review](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews#about-pull-request-reviews) system.
 

@@ -22,19 +22,19 @@ A microbial interactions catalog
 
             .. block-primary:: Download the atlas
 
-                The reformatted atlas is available as a tab-separated file (.tsv) and include doi references (v0.1).
+                The reformatted atlas is available as a `tab-separated file <https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv>`_ (.tsv) and include doi references (v0.1).
 
                 .. button-primary:: https://github.com/cpauvert/mi-atlas/raw/main/mi-atlas.tsv
 
-                    Get the atlas!
+                    Get the (raw) atlas!
 
         .. container:: m-col-m-4
 
             .. block-info:: Visualize the atlas
 
-                Microbial interactions entries can be browsed (for now) using Github rendering of .tsv data.
+                Microbial interactions entries can be interactively browsed through the Shiny App.
 
-                .. button-info:: https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv
+                .. button-info:: https://cpauvert.shinyapps.io/mi-atlas
 
                     Explore!
 
