@@ -138,8 +138,7 @@ ui <- fluidPage(
 # Define server logic
 server <- function(input, output, session) {
   output$logo <- renderImage({
-    list(src="docs/content/extra/logo.png",
-         # align="left", width="155", height="179",
+    list(src="www/logo.png",
          align="left", width="77.5", height="89.5",
          alt = "Logo of mi-atlas")
   }, deleteFile = FALSE)
