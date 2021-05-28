@@ -63,23 +63,33 @@ ui <- fluidPage(
              column(width = 6,
                     h2("About mi-atlas", align = "center"),
                     p("Here is the list of interactions occuring between microorganisms that are documented",
-                      "in the versioned catalog (see website).", "This classification is based on a framework",
+                      "in the versioned catalog (see",
+                      a(href="https://cpauvert.github.io/mi-atlas",
+                        target = "_blank", rel = "noreferrer noopener", "website", .noWS = "after"),
+                      ").", "This classification is based on a framework",
                       "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125",
                                         target = "_blank", rel = "noreferrer noopener",
                                         # open in new tab w/ protection
-                                        "(Pacheco and Segrè, 2019)."), align = "left")),
+                                        "Pacheco and Segrè (2019)."), align = "left")),
              column(width = 6,
                     h2("How to explore", align = "center"),
-                    p("Browse the list of microbial interactions below.",
-                      "Upon selection of a row, details of the interaction will be displayed",
-                      a(href = "#interaction-details", "below"),"the table."),
+                    tags$ol(
+                      tags$li("Browse the following",
+                              a(href="#list", "list"),"of microbial interactions"),
+                      tags$li("Select an interaction in the table (e.g. #7)."),
+                      tags$li("View the detailed catalog entry",
+                              a(href = "#interaction-details", icon("level-down-alt", class = "fa-xs")))
+                    ),
                     helpText("Details on the column names can be found",
                              a(href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions",
                                target = "_blank", rel = "noreferrer noopener",
                                # open in new tab w/ protection
                                "here."))
                     )),
-           fluidRow(h2("List of microbial interactions", align = "center"), DT::dataTableOutput("table"))
+           fluidRow(
+             h2("List of microbial interactions", align = "center", id="list"),
+             DT::dataTableOutput("table")
+           )
     ),
     column(align = "center", width = 1, offset = 1,
       a(href="https://cpauvert.github.io/mi-atlas/framework.html",
@@ -100,16 +110,17 @@ ui <- fluidPage(
   fluidRow(
     column(width = 8, offset = 2,
            h2("Details on the interaction", textOutput("int_no", inline = T),
-              id="interaction-details", align = "center"),
+              id="interaction-details", align = "center",
+              a(href="#list",icon("level-up-alt", class = "fa-xs"))),
            h3("Interaction name:", textOutput("int_name", inline = T), align = "center"),
-           h4("Taxonomy and specificity"),
+           h4("Taxonomy and specificity", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
            tags$ul(
              tags$li(textOutput("int_tax")),
              tags$li(textOutput("int_specificity"))
            ),
-           h4("Interaction participants"),
+           h4("Interaction participants", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
            column(width = 10, offset = 1, tableOutput("participant_table")),
-           h4("Interaction features"),
+           h4("Interaction features", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
            fluidRow(
              column(width = 5, offset = 1, h5("Dependencies"), tableOutput("dependencies_table")),
              column(width = 5, offset = 1, h5("Site"), tableOutput("site_table"))
@@ -118,7 +129,7 @@ ui <- fluidPage(
              column(width = 5, offset = 1, h5("Habitat"), tableOutput("habitat_table")),
              column(width = 5, offset = 1, h5("Compounds"), tableOutput("compounds_table"))
            ),
-           h4("References"),
+           h4("References", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
            tags$ul(uiOutput("references"))
     )
   )
@@ -282,9 +293,9 @@ server <- function(input, output, session) {
         tags$a(
           href=paste0("https://doi.org/", reference),
           target = "_blank", rel = "noreferrer noopener",
-          reference
-          )
+          paste("doi:", reference)
         )
+      )
     })
   })
 }
