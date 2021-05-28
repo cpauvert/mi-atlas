@@ -25,7 +25,21 @@ if(!exists("questions")){
     "Taxonomic_resolution" = "What is the taxonomic resolution of the interaction?",
     "Specificity" = "Is the mechanism of interaction specific?",
     "Cost" = "Is participation costly?",
-    "Outcome" = "What is the outcome?"
+    "Outcome" = "What is the outcome?",
+    "Contact_dependent" = "Contact?",
+    "Time_dependent" = "Time?",
+    "Space_dependent" = "Space?",
+    "Cytoplasm" = "Cytoplasm?",
+    "Membrane" = "Membrane?",
+    "Extracellular" = "Extracellular?",
+    "Aquatic" = "Aquatic?",
+    "Biofilm" = "Biofilm?",
+    "Food_product" = "Food product?",
+    "Multicellular_host" = "Multicellular host?",
+    "Soil" = "Soil?", "Synthetic" = "Synthetic?",
+    "Ubiquitous" = "Ubiquitous?",
+    "Small_molecules" = "Small molecules?", "Nucleic_acids" = "Nucleic acids?",
+    "Peptides" = "Peptides?", "Secondary_metabolites" = "Secondary metabolites?"
   )
 }
 
@@ -98,11 +112,17 @@ ui <- fluidPage(
            h4("Interaction participants"),
            column(width = 10, offset = 1, tableOutput("participant_table")),
            h4("Interaction features"),
-           column(width = 3, tableOutput("dependencies_table")),
-           column(width = 3),
-           column(width = 3),
-           column(width = 3)
-           )
+           fluidRow(
+             column(width = 5, offset = 1, h5("Dependencies"), tableOutput("dependencies_table")),
+             column(width = 5, offset = 1, h5("Site"), tableOutput("site_table"))
+           ),
+           fluidRow(
+             column(width = 5, offset = 1, h5("Habitat"), tableOutput("habitat_table")),
+             column(width = 5, offset = 1, h5("Compounds"), tableOutput("compounds_table"))
+           ),
+           h4("References"),
+           tags$ul(uiOutput("references"))
+    )
   )
 )
 
@@ -193,15 +213,82 @@ server <- function(input, output, session) {
     # This function should not be ran before a row is selected.
     req(input$table_rows_selected)
     # Assemble the table
-    ptable<-matrix(
+    dtable<-matrix(
       data = unlist(selected_atlas()[c(
         "Contact_dependent", "Time_dependent", "Space_dependent")]),
       nrow = 3, ncol = 1, byrow = F)
     # Add the questions as row.names
-    rownames(ptable) <- unlist(
-      unname(questions[c("Participant", "Domain","Cost", "Outcome")])
+    rownames(dtable) <- unlist(
+      unname(questions[c("Contact_dependent", "Time_dependent", "Space_dependent")])
     )
-  }, rownames = T, colnames = T, na = "", hover = T, spacing = "xs")
+    colnames(dtable) <- "Dependencies"
+    dtable
+  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  output$site_table <- renderTable({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Assemble the table
+    stable<-matrix(
+      data = unlist(selected_atlas()[c(
+        "Cytoplasm", "Membrane", "Extracellular")]),
+      nrow = 3, ncol = 1, byrow = F)
+    # Add the questions as row.names
+    rownames(stable) <- unlist(
+      unname(questions[c("Cytoplasm", "Membrane", "Extracellular")])
+    )
+    colnames(stable) <- "Site"
+    stable
+  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  output$habitat_table <- renderTable({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Assemble the table
+    htable<-matrix(
+      data = unlist(selected_atlas()[c(
+        "Aquatic", "Biofilm", "Food_product",
+        "Multicellular_host", "Soil", "Synthetic", "Ubiquitous")]),
+      nrow = 7, ncol = 1, byrow = F)
+    # Add the questions as row.names
+    rownames(htable) <- unlist(
+      unname(questions[c("Aquatic", "Biofilm", "Food_product",
+                         "Multicellular_host", "Soil", "Synthetic", "Ubiquitous")])
+    )
+    colnames(htable) <- "Habitat"
+    htable
+  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  output$compounds_table <- renderTable({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Assemble the table
+    ctable<-matrix(
+      data = unlist(selected_atlas()[c(
+        "Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites")]),
+      nrow = 4, ncol = 1, byrow = F)
+    # Add the questions as row.names
+    rownames(ctable) <- unlist(
+      unname(questions[c("Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites")])
+    )
+    colnames(ctable) <- "Site"
+    ctable
+  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  output$references <- renderUI({
+    # This function should not be ran before a row is selected.
+    req(input$table_rows_selected)
+    # Extract the references separated by ";"
+    refs <- unlist(strsplit(
+      selected_atlas()[["References"]], ";"
+    ))
+    # Format the links
+    lapply(refs, function(reference){
+      tags$li(
+        tags$a(
+          href=paste0("https://doi.org/", reference),
+          target = "_blank", rel = "noreferrer noopener",
+          reference
+          )
+        )
+    })
+  })
 }
 
 # Run the application 
