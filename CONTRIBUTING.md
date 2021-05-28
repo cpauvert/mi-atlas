@@ -27,7 +27,7 @@ There is no template for writing the issue but please state as precisely as poss
 
 The `mi-atlas` project should be first *forked* in order to suggest any contributions with pull request (whether online through Github or in the command line).
 
-The catalog is a tab-separated [file](https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv), therefore any contributions to the catalog should modify this file.
+The catalog is a tab-separated [file](https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv), therefore any contributions to the catalog should modify this file (learn [here](https://docs.github.com/en/github/managing-files-in-a-repository/managing-files-on-github/editing-files-in-another-users-repository) how to do it easily online).
 
 New pull request are welcome for the same suggestion as the issues above and are expected to use the same labels.
 
