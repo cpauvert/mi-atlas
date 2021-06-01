@@ -42,7 +42,7 @@ if(!exists("questions")){
 }
 
 # Define UI
-ui <- fluidPage(
+ui <- navbarPage(
   lang = "en", 
   title = "mi-atlas",
   theme = bs_theme( # Based on m.css dark theme
@@ -52,75 +52,76 @@ ui <- fluidPage(
     base_font = font_google("Source Sans Pro"),
     code_font = font_google("Source Code Pro")
   ),
-  fluidRow(column(width = 12, align = "center",
-                  h1("An interactive and evolving microbial interactions catalog"))),
-  fluidRow(
-    column(
-      imageOutput("logo"),
-      align = "center", alt = "Logo of mi-atlas", width = 1),
-    column(width = 8, offset = 1,
-           fluidRow(
-             column(width = 6,
-                    h2("About mi-atlas", align = "center"),
-                    p("Here is the list of interactions occuring between microorganisms that are documented",
-                      "in the versioned catalog (see",
-                      a(href="https://cpauvert.github.io/mi-atlas",
-                        target = "_blank", rel = "noreferrer noopener", "website", .noWS = "after"),
-                      ").", "This classification is based on a framework",
-                      "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125",
-                                        target = "_blank", rel = "noreferrer noopener",
-                                        # open in new tab w/ protection
-                                        "Pacheco and Segrè (2019)."), align = "left")),
-             column(width = 6,
-                    h2("How to explore", align = "center"),
-                    tags$ol(
-                      tags$li("Browse the following",
-                              a(href="#list", "list"),"of microbial interactions"),
-                      tags$li("Select an interaction in the table (e.g. #7)."),
-                      tags$li("View the detailed catalog entry",
-                              a(href = "#interaction-details", icon("level-down-alt", class = "fa-xs")))
-                    ),
-                    helpText("Details on the column names can be found",
-                             a(href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions",
-                               target = "_blank", rel = "noreferrer noopener",
-                               # open in new tab w/ protection
-                               "here."))
-                    )),
-           fluidRow(
-             h2("List of microbial interactions", align = "center", id="list"),
-             DT::dataTableOutput("table")
-           )
+  position = "fixed-top",
+  footer = list(
+    column(hr(),
+           p("mi-atlas.",
+           a(href="https://cpauvert.github.io/mi-atlas",
+             target = "_blank", rel = "noreferrer noopener", icon("globe"),
+             "Website"), " / ",
+           a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
+             target = "_blank", rel = "noreferrer noopener", icon("github"),
+             "Github")),
+           align = "center", width = 12)
     ),
-    column(align = "center", width = 1, offset = 1,
-      a(href="https://cpauvert.github.io/mi-atlas/framework.html",
-        target = "_blank", rel = "noreferrer noopener",
-        icon("book-open")), br(),
-      a(href="https://cpauvert.github.io/mi-atlas/framework.html",
-        target = "_blank", rel = "noreferrer noopener", "Framework"), br(),
-      a(href="https://cpauvert.github.io/mi-atlas",
-        target = "_blank", rel = "noreferrer noopener", icon("globe")), br(),
-      a(href="https://cpauvert.github.io/mi-atlas",
-        target = "_blank", rel = "noreferrer noopener", "Website"), br(),
-      a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
-        target = "_blank", rel = "noreferrer noopener", icon("github")), br(),
-      a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
-        target = "_blank", rel = "noreferrer noopener", "Contribute")
-      )
-  ),
+  id = "navbar",
+  tabPanel("Browse the catalog", value = "catalog",
+           column(width = 12, align = "center",
+                  tags$style(type="text/css", "body {padding-top: 70px;}"),
+                  h1("An interactive and evolving microbial interactions catalog")),
+           column(width = 8, offset = 2,
+                  fluidRow(
+                    column(width = 6,
+                           h2("About mi-atlas", align = "center"),
+                           p("Here is the list of interactions occuring between microorganisms that are documented",
+                             "in the versioned catalog (see",
+                             a(href="https://cpauvert.github.io/mi-atlas",
+                               target = "_blank", rel = "noreferrer noopener", "website", .noWS = "after"),
+                             ").", "This classification is based on a framework",
+                             "suggested by", a(href="https://doi.org/10.1093/femsle/fnz125",
+                                               target = "_blank", rel = "noreferrer noopener",
+                                               # open in new tab w/ protection
+                                               "Pacheco and Segrè (2019)."), align = "left")),
+                    column(width = 6,
+                           h2("How to explore", align = "center"),
+                           tags$ol(
+                             tags$li("Browse the following",
+                                     a(href="#list", "list"),"of microbial interactions"),
+                             tags$li("Select an interaction in the table (e.g. #7)."),
+                             tags$li("View the detailed catalog entry using the top bar or the bottom button.")
+                           ),
+                           helpText("Details on the column names can be found",
+                                    a(href="https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions",
+                                      target = "_blank", rel = "noreferrer noopener",
+                                      # open in new tab w/ protection
+                                      "here.")),
+                           verbatimTextOutput("checkRows")
+                    )),
+                  fluidRow(
+                    h2("List of microbial interactions", align = "center", id="list"),
+                    DT::dataTableOutput("table")
+                  ),
+                  br(),
+                  column(width = 12, align = "center",
+                         actionButton(inputId = "viewDetail",
+                                      "View detailed entry of the interaction",
+                                      width = "250px")
+                  )
+           )),
+  tabPanel("View detailed entry", value = "detail",
   fluidRow(
     column(width = 8, offset = 2,
            h2("Details on the interaction", textOutput("int_no", inline = T),
-              id="interaction-details", align = "center",
-              a(href="#list",icon("level-up-alt", class = "fa-xs"))),
+              id="interaction-details", align = "center"),
            h3("Interaction name:", textOutput("int_name", inline = T), align = "center"),
-           h4("Taxonomy and specificity", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
+           h4("Interaction participants"),
+           column(width = 10, offset = 1, tableOutput("participant_table")),
+           h4("Taxonomy and specificity"),
            tags$ul(
              tags$li(textOutput("int_tax")),
              tags$li(textOutput("int_specificity"))
            ),
-           h4("Interaction participants", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
-           column(width = 10, offset = 1, tableOutput("participant_table")),
-           h4("Interaction features", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
+           h4("Interaction features"),
            fluidRow(
              column(width = 5, offset = 1, h5("Dependencies"), tableOutput("dependencies_table")),
              column(width = 5, offset = 1, h5("Site"), tableOutput("site_table"))
@@ -129,19 +130,37 @@ ui <- fluidPage(
              column(width = 5, offset = 1, h5("Habitat"), tableOutput("habitat_table")),
              column(width = 5, offset = 1, h5("Compounds"), tableOutput("compounds_table"))
            ),
-           h4("References", a(href="#list",icon("level-up-alt", class = "fa-xs"))),
+           h4("References"),
            tags$ul(uiOutput("references"))
     )
+  ),
+  br(),
+  fluidRow(
+    column(width = 4, offset = 2, align = "center",
+           actionButton(inputId = "viewCatalog",
+                        "Explore another entry in the catalog of interactions",
+                        width = "250px")),
+    column(width = 4, align = "center",
+           actionButton(inputId = "viewNewEntry",
+                        "Suggest a new interaction for the catalog",
+                        width = "250px"))
+  )
+  ),
+  tabPanel("Add an interaction", value = "new-mi-entry",
+           fluidRow(
+             column(width = 8, offset = 2,
+                    h2("Contribute to the catalog with a new microbial interaction", align = "center"),
+                    p("Please fill the following form by answering Yes/No or Unknown to the set of questions",
+                      "designed to encode the new interaction into the",
+                      a(href="https://cpauvert.github.io/mi-atlas/framework.html",
+                        target = "_blank", rel = "noreferrer noopener", "framework."))
+             )
+           )
   )
 )
 
 # Define server logic
 server <- function(input, output, session) {
-  output$logo <- renderImage({
-    list(src="www/logo.png",
-         align="left", width="77.5", height="89.5",
-         alt = "Logo of mi-atlas")
-  }, deleteFile = FALSE)
   preview_atlas <- reactive({
     mi_atlas[ , c("Interaction_name",
                   "Participant_1",
@@ -296,6 +315,22 @@ server <- function(input, output, session) {
         )
       )
     })
+  })
+  # Change to detailed entry with button
+  observeEvent(input$viewDetail, {
+    updateNavbarPage(session = session, inputId = "navbar", selected = "detail")
+  })
+  observeEvent(input$viewCatalog, {
+    updateNavbarPage(session = session, inputId = "navbar", selected = "catalog")
+  })
+  observeEvent(input$viewNewEntry, {
+    updateNavbarPage(session = session, inputId = "navbar", selected = "new-mi-entry")
+  })
+  observe({
+    req(input$table_rows_selected)
+    updateActionButton(session = session, inputId = "viewDetail",
+                       label = paste0("View detailed entry of the interaction #",
+                                     input$table_rows_selected))
   })
 }
 
