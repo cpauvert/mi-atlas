@@ -507,19 +507,21 @@ server <- function(input, output, session) {
   })
   observeEvent(input$n_p_no, {
     if(input$n_p_no == 2){
+      showNotification("Two participants selected for new entry", type = "message")
       updateTextInput(session, "n_p3", value = "Unknown", label = "No participant 3")
       updateSelectInput(session, "n_dom_p3", selected = "Unknown", label = "No participant 3")
       updateRadioButtons(session, "n_cost_p3", selected = "Unknown", label = "No participant 3")
       updateSelectInput(session, "n_outcome_p3", selected = "Unknown", label = "No participant 3")
       updateSelectInput(session, "n_taxres_p3", selected = "Unknown", label = "No participant 3")
     } else {
+      showNotification("Three participants selected for new entry", type = "message")
       updateTextInput(session, "n_p3", value = "", label = "Participant 3?")
       updateSelectInput(session, "n_dom_p3", selected = "", label = "Participant 3?")
       updateRadioButtons(session, "n_cost_p3", selected = "Unknown", label = "Participant 3?")
       updateSelectInput(session, "n_outcome_p3", selected = "Unknown", label = "Participant 3?")
       updateSelectInput(session, "n_taxres_p3", selected = "Species", label = "Participant 3?")
     }
-  })
+  }, ignoreInit = T)
   observeEvent(input$more_reference, {
     insertUI("#n_reference_1", where = "afterEnd",
              ui = textInput(paste0("n_reference_", input$more_reference), "DOI of the article")
