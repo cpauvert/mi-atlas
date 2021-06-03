@@ -41,6 +41,18 @@ if(!exists("questions")){
   )
 }
 
+rev.list <- function(lst){
+  # Reverse names and objects
+  setNames(object = names(lst), nm = lst)
+}
+
+if(!exists("tax")){
+  tax <- list(
+    "domain" = c("Archaea", "Bacteria", "Eukarya", "Viruses"),
+    "resolution" = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+  )
+}
+
 # Define UI
 ui <- navbarPage(
   lang = "en", 
@@ -56,14 +68,14 @@ ui <- navbarPage(
   footer = list(
     column(hr(),
            p("mi-atlas.",
-           a(href="https://cpauvert.github.io/mi-atlas",
-             target = "_blank", rel = "noreferrer noopener", icon("globe"),
-             "Website"), " / ",
-           a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
-             target = "_blank", rel = "noreferrer noopener", icon("github"),
-             "Github")),
+             a(href="https://cpauvert.github.io/mi-atlas",
+               target = "_blank", rel = "noreferrer noopener", icon("globe"),
+               "Website"), " / ",
+             a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
+               target = "_blank", rel = "noreferrer noopener", icon("github"),
+               "Github")),
            align = "center", width = 12)
-    ),
+  ),
   id = "navbar",
   tabPanel("Browse the catalog", value = "catalog",
            column(width = 12, align = "center",
@@ -109,52 +121,210 @@ ui <- navbarPage(
                   )
            )),
   tabPanel("View detailed entry", value = "detail",
-  fluidRow(
-    column(width = 8, offset = 2,
-           h2("Details on the interaction", textOutput("int_no", inline = T),
-              id="interaction-details", align = "center"),
-           h3("Interaction name:", textOutput("int_name", inline = T), align = "center"),
-           h4("Interaction participants"),
-           column(width = 10, offset = 1, tableOutput("participant_table")),
-           h4("Taxonomy and specificity"),
-           tags$ul(
-             tags$li(textOutput("int_tax")),
-             tags$li(textOutput("int_specificity"))
-           ),
-           h4("Interaction features"),
-           fluidRow(
-             column(width = 5, offset = 1, h5("Dependencies"), tableOutput("dependencies_table")),
-             column(width = 5, offset = 1, h5("Site"), tableOutput("site_table"))
-           ),
-           fluidRow(
-             column(width = 5, offset = 1, h5("Habitat"), tableOutput("habitat_table")),
-             column(width = 5, offset = 1, h5("Compounds"), tableOutput("compounds_table"))
-           ),
-           h4("References"),
-           tags$ul(uiOutput("references"))
-    )
-  ),
-  br(),
-  fluidRow(
-    column(width = 4, offset = 2, align = "center",
-           actionButton(inputId = "viewCatalog",
-                        "Explore another entry in the catalog of interactions",
-                        width = "250px")),
-    column(width = 4, align = "center",
-           actionButton(inputId = "viewNewEntry",
-                        "Suggest a new interaction for the catalog",
-                        width = "250px"))
-  )
-  ),
-  tabPanel("Add an interaction", value = "new-mi-entry",
            fluidRow(
              column(width = 8, offset = 2,
+                    h2("Details on the interaction", textOutput("int_no", inline = T),
+                       id="interaction-details", align = "center"),
+                    h3("Interaction name:", textOutput("int_name", inline = T), align = "center"),
+                    h4("Interaction participants"),
+                    column(width = 10, offset = 1, tableOutput("participant_table")),
+                    h4("Taxonomy and specificity"),
+                    tags$ul(
+                      tags$li(textOutput("int_tax")),
+                      tags$li(textOutput("int_specificity"))
+                    ),
+                    h4("Interaction features"),
+                    fluidRow(
+                      column(width = 5, offset = 1, h5("Dependencies"), tableOutput("dependencies_table")),
+                      column(width = 5, offset = 1, h5("Site"), tableOutput("site_table"))
+                    ),
+                    fluidRow(
+                      column(width = 5, offset = 1, h5("Habitat"), tableOutput("habitat_table")),
+                      column(width = 5, offset = 1, h5("Compounds"), tableOutput("compounds_table"))
+                    ),
+                    h4("References"),
+                    tags$ul(uiOutput("references"))
+             )
+           ),
+           br(),
+           fluidRow(
+             column(width = 4, offset = 2, align = "center",
+                    actionButton(inputId = "viewCatalog",
+                                 "Explore another entry in the catalog of interactions",
+                                 width = "250px")),
+             column(width = 4, align = "center",
+                    actionButton(inputId = "viewNewEntry",
+                                 "Suggest a new interaction for the catalog",
+                                 width = "250px"))
+           )
+  ),
+  tabPanel("Add an interaction", value = "new-mi-entry",
+           column(width = 8, offset = 2,
+                  fluidRow(
                     h2("Contribute to the catalog with a new microbial interaction", align = "center"),
                     p("Please fill the following form by answering Yes/No or Unknown to the set of questions",
                       "designed to encode the new interaction into the",
                       a(href="https://cpauvert.github.io/mi-atlas/framework.html",
                         target = "_blank", rel = "noreferrer noopener", "framework."))
-             )
+                  ),
+                  h4("Interaction participants"),
+                  fluidRow(
+                    column(width = 3,
+                           radioButtons(inputId = "n_p_no", label = "How many participants in the new interaction?",
+                                        choices = c("2" = 2, "3" = 3),
+                                        inline = T)),
+                    column(width = 3,
+                           textInput(inputId = "n_p1", label = "Participant 1?")),
+                    column(width = 3,
+                           textInput(inputId = "n_p2", label = "Participant 2?")),
+                    column(width = 3,
+                           textInput(inputId = "n_p3", label = "Participant 3?"))
+                  ),
+                  fluidRow(
+                    column(width = 3, p(questions["Domain"],
+                                        helpText("Multiple domains allowed for consortium"))),
+                    column(width = 3,
+                           selectInput(inputId = "n_dom_p1", label = "Participant 1?",
+                                       choices = tax[["domain"]], multiple = T)),
+                    column(width = 3,
+                           selectInput(inputId = "n_dom_p2", label = "Participant 2?",
+                                       choices = tax[["domain"]], multiple = T)),
+                    column(width = 3,
+                           selectInput(inputId = "n_dom_p3", label = "Participant 3?",
+                                       choices = c(tax[["domain"]], "Unknown"), multiple = T))
+                  ),
+                  fluidRow(
+                    column(width = 3, p(questions["Cost"])),
+                    column(width = 3,
+                           radioButtons(inputId = "n_cost_p1", label = "Participant 1?", inline = T,
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown")),
+                    column(width = 3,
+                           radioButtons(inputId = "n_cost_p2", label = "Participant 2?", inline = T,
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown")),
+                    column(width = 3,
+                           radioButtons(inputId = "n_cost_p3", label = "Participant 3?", inline = T,
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown"))
+                  ),
+                  fluidRow(
+                    column(width = 3, p(questions["Outcome"])),
+                    column(width = 3,
+                           selectInput(inputId = "n_outcome_p1", label = "Participant 1?",
+                                       choices = rev.list(decoding[["ternary"]]), selected = "Unknown")),
+                    column(width = 3,
+                           selectInput(inputId = "n_outcome_p2", label = "Participant 2?",
+                                       choices = rev.list(decoding[["ternary"]]), selected = "Unknown")),
+                    column(width = 3,
+                           selectInput(inputId = "n_outcome_p3", label = "Participant 3?",
+                                       choices = rev.list(decoding[["ternary"]]), selected = "Unknown"))
+                  ),
+                  h4("Taxonomy and specificity"),
+                  fluidRow(
+                    column(width = 3, p(questions["Taxonomic_resolution"])),
+                    column(width = 3,
+                           selectInput(inputId = "n_taxres_p1", label = "Participant 1?",
+                                       choices = tax[["resolution"]], selected = "Species")),
+                    column(width = 3,
+                           selectInput(inputId = "n_taxres_p2", label = "Participant 2?",
+                                       choices = tax[["resolution"]], selected = "Species")),
+                    column(width = 3,
+                           selectInput(inputId = "n_taxres_p3", label = "Participant 3?",
+                                       choices = c(tax[["resolution"]], "Unknown"), selected = "Unknown"))
+                  ),
+                  fluidRow(
+                    column(width = 3, p(questions["Specificity"])),
+                    column(width = 4,
+                           radioButtons("n_specificity", label = NULL, inline = T,
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown")
+                    )
+                  ),
+                  h4("Interaction features"),
+                  h5("Dependencies"),
+                  fluidRow(
+                    column(width = 3, p("Are there reported dependencies on the interaction?")),
+                    column(width = 3,
+                           radioButtons(inputId = "n_site_contact", label = questions[["Contact_dependent"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_site_time", label = questions[["Time_dependent"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_site_space", label = questions[["Space_dependent"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  h5("Site"),
+                  fluidRow(
+                    column(width = 3, p("What is the site of the mechanism of interaction at the cellular level?")),
+                    column(width = 3,
+                           radioButtons(inputId = "n_dep_cytoplasm", label = questions[["Cytoplasm"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_dep_membrane", label = questions[["Membrane"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_dep_extracellular", label = questions[["Extracellular"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  h5("Habitat"),
+                  fluidRow(
+                    column(width = 3, p("What is the biome where the interaction takes place?")),
+                    column(width = 2,
+                           radioButtons(inputId = "n_hab_aquatic", label = questions[["Aquatic"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 2,
+                           radioButtons(inputId = "n_hab_biofilm", label = questions[["Biofilm"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 2,
+                           radioButtons(inputId = "n_hab_food", label = questions[["Food_product"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_hab_host", label = questions[["Multicellular_host"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  fluidRow(
+                    column(width = 2, offset = 4,
+                           radioButtons(inputId = "n_hab_soil", label = questions[["Soil"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 2,
+                           radioButtons(inputId = "n_hab_synthetic", label = questions[["Synthetic"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 2,
+                           radioButtons(inputId = "n_hab_ubiquitous", label = questions[["Ubiquitous"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  h5("Compounds"),
+                  fluidRow(
+                    column(width = 3, p("What type of compounds are involved?")),
+                    column(width = 3,
+                           radioButtons(inputId = "n_comp_mol", label = questions[["Small_molecules"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_comp_nucleic", label = questions[["Nucleic_acids"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
+                    column(width = 3,
+                           radioButtons(inputId = "n_comp_peptites", label = questions[["Peptides"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  fluidRow(
+                    column(width = 3, offset = 6,
+                           radioButtons(inputId = "n_comp_metabolites", label = questions[["Secondary_metabolites"]],
+                                        choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
+                  ),
+                  h4("References"),
+                  fluidRow(
+                    column(width = 3, p("What peer-reviewed articles document the interaction?")),
+                    column(width = 9,
+                           textInput("n_reference_1", label = "DOI of the article", placeholder = "e.g. 10.1010/pnh.1010"),
+                           actionLink("more_reference", "Additional reference", icon = icon("plus-square"))
+                    )
+                  ),
+                  h4("Build the new entry using the framework"),
+                  fluidRow(
+                    column(width = 3, p("The new entry will be generated with the following name")),
+                    column(width = 4,
+                           textInput(inputId = "n_int_name", label = "Interaction name (pre-filled)")),
+                    column(width = 4,
+                           actionButton("n_render", "Generate the new entry", style = 'margin-top:31px'))
+                  )
            )
   )
 )
@@ -187,7 +357,7 @@ server <- function(input, output, session) {
       # Convert the ternary
       if( foo %in% paste0(c("Outcome_for_P"), 1:3) ){
         s_atlas[[foo]] <- unname(decoding[["ternary"]][ value ])
-      # Convert the binary
+        # Convert the binary
       } else if( foo %in% c(
         "Specificity",
         "Cost_to_P1", "Cost_to_P2", "Cost_to_P3",
@@ -209,11 +379,11 @@ server <- function(input, output, session) {
   })
   output$int_tax <- renderText({
     paste0(questions[["Taxonomic_resolution"]]," ",
-          selected_atlas()[["Taxonomic_resolution"]],". ")
+           selected_atlas()[["Taxonomic_resolution"]],". ")
   })
   output$int_specificity <- renderText({
     paste0(questions[["Specificity"]]," ",
-          selected_atlas()[["Specificity"]],".")
+           selected_atlas()[["Specificity"]],".")
   })
   output$participant_table<-renderTable({
     # This function should not be ran before a row is selected.
@@ -226,10 +396,10 @@ server <- function(input, output, session) {
         "Participant_3", "Domain_3","Cost_to_P3", "Outcome_for_P3")
         ]),
       nrow = 4, ncol = 3, byrow = F)
-      # Add the questions as row.names
+    # Add the questions as row.names
     rownames(ptable) <- unlist(
       unname(questions[c("Participant", "Domain","Cost", "Outcome")])
-      )
+    )
     # Drop the third participant column if its name is Unknown
     if(selected_atlas()[["Participant_3"]] == "Unknown"){
       ptable <- ptable[, -3]
@@ -326,11 +496,34 @@ server <- function(input, output, session) {
   observeEvent(input$viewNewEntry, {
     updateNavbarPage(session = session, inputId = "navbar", selected = "new-mi-entry")
   })
+  output$min_int_no <- renderText({ nrow(mi_atlas)+1 })
   observe({
     req(input$table_rows_selected)
     updateActionButton(session = session, inputId = "viewDetail",
                        label = paste0("View detailed entry of the interaction #",
-                                     input$table_rows_selected))
+                                      input$table_rows_selected))
+    updateTextInput(session, "n_int_name",
+                    value = paste(input$n_p1, input$n_p2, sep = " - "))
+  })
+  observeEvent(input$n_p_no, {
+    if(input$n_p_no == 2){
+      updateTextInput(session, "n_p3", value = "Unknown", label = "No participant 3")
+      updateSelectInput(session, "n_dom_p3", selected = "Unknown", label = "No participant 3")
+      updateRadioButtons(session, "n_cost_p3", selected = "Unknown", label = "No participant 3")
+      updateSelectInput(session, "n_outcome_p3", selected = "Unknown", label = "No participant 3")
+      updateSelectInput(session, "n_taxres_p3", selected = "Unknown", label = "No participant 3")
+    } else {
+      updateTextInput(session, "n_p3", value = "", label = "Participant 3?")
+      updateSelectInput(session, "n_dom_p3", selected = "", label = "Participant 3?")
+      updateRadioButtons(session, "n_cost_p3", selected = "Unknown", label = "Participant 3?")
+      updateSelectInput(session, "n_outcome_p3", selected = "Unknown", label = "Participant 3?")
+      updateSelectInput(session, "n_taxres_p3", selected = "Species", label = "Participant 3?")
+    }
+  })
+  observeEvent(input$more_reference, {
+    insertUI("#n_reference_1", where = "afterEnd",
+             ui = textInput(paste0("n_reference_", input$more_reference), "DOI of the article")
+    )
   })
 }
 
