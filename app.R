@@ -162,14 +162,34 @@ ui <- navbarPage(
   tabPanel("Add an interaction", value = "new-mi-entry",
            useShinyFeedback(),
            column(width = 8, offset = 2,
+                  h2("Contribute to the catalog with a new microbial interaction", align = "center"),
                   fluidRow(
-                    h2("Contribute to the catalog with a new microbial interaction", align = "center"),
-                    p("Please fill the following form by answering Yes/No or Unknown to the set of questions",
-                      "designed to encode the new interaction into the",
-                      a(href="https://cpauvert.github.io/mi-atlas/framework.html",
-                        target = "_blank", rel = "noreferrer noopener", "framework."))
+                    column(width = 6,
+                           p("In short, to contribute you need to:",
+                             tags$ol(
+                               tags$li("Fill the", a(href="#form","form"),"below"),
+                               tags$li("Press the 'Generate the new entry'", a(href="#generate", "button")),
+                               tags$li("Copy the encoded entry which is a new line of the tab-separated catalog"),
+                               tags$li(a(href="https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv", "Edit"),
+                                       "the tab-separated catalog (",
+                                       a(href="https://docs.github.com/en/github/managing-files-in-a-repository/managing-files-on-github/editing-files-in-another-users-repository",
+                                         target = "_blank", rel = "noreferrer noopener", "how-to", .noWS = "before"), "if need be)"),
+                               tags$li("Submit a pull request with your new entry.")
+                             )
+                           )),
+                    column(width = 6,
+                           p("Thank you for your willingness to contribute!",
+                             "Feel free to have a look to the",
+                             a(href="https://github.com/cpauvert/mi-atlas/blob/main/CONTRIBUTING.md",
+                               target = "_blank", rel = "noreferrer noopener","contribution guidelines"),
+                             "of the repository."),
+                           helpText("The form accepts either free mandatory text or pre-computed answers (Yes/No/Unknown).",
+                                    "Questions were designed to encode the new interaction into the",
+                                    a(href="https://cpauvert.github.io/mi-atlas/framework.html",
+                                      target = "_blank", rel = "noreferrer noopener", "framework."))
+                    )
                   ),
-                  h4("Interaction participants"),
+                  h4("Interaction participants", id = "form"),
                   fluidRow(
                     column(width = 3,
                            radioButtons(inputId = "n_p_no", label = "How many participants in the new interaction?",
@@ -319,7 +339,7 @@ ui <- navbarPage(
                            actionLink("more_reference", "Additional reference", icon = icon("plus-square"))
                     )
                   ),
-                  h4("Build the new entry using the framework"),
+                  h4("Build the new entry using the framework", id="generate"),
                   fluidRow(
                     column(width = 3, p("The new entry will be generated with the following name")),
                     column(width = 4,
