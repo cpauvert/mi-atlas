@@ -25,9 +25,9 @@ Encoding a microbial interations between 2 or 3 participants boils down to answe
     3. Is the mechanism of the studied interaction **specific**?
     4. Is there a documented **cost** of engaging in the interaction and does it differ between participants?
     5. What are the ecological **outcomes** for each participant?
-    6. Is the interaction documented to **depend** on physical contact, time or space? 
+    6. Is the interaction documented to **depends** on physical contact, time or space?
     7. What is the **site** of the mechanism of interaction at the cellular level?
-    8. What is the **biome** where the interaction take place?
+    8. What is the **biome** where the interaction takes place?
     9. What type of **compounds** are involved?
 
 .. note-warning::
@@ -39,4 +39,4 @@ Encoding a microbial interations between 2 or 3 participants boils down to answe
     Answers to the questions of the framework are to be supported by peer-reviewed literature. References to relevant articles are then included along the catalog entry.
 
 
-For more details on the framework definitions, have a look at the `README <https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions>`_ on the projec repository and the original `article <https://doi.org/10.1093/femsle/fnz125>`_.
+For more details on the framework definitions, have a look at the `README <https://github.com/cpauvert/mi-atlas/blob/main/README.md#attributes-of-microbial-interactions>`_ on the project repository and the original `article <https://doi.org/10.1093/femsle/fnz125>`_.
