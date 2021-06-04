@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(DT)
+library(shinyFeedback)
 
 # Resources to be loaded
 if(!exists("mi_atlas")){
@@ -159,6 +160,7 @@ ui <- navbarPage(
            )
   ),
   tabPanel("Add an interaction", value = "new-mi-entry",
+           useShinyFeedback(),
            column(width = 8, offset = 2,
                   fluidRow(
                     h2("Contribute to the catalog with a new microbial interaction", align = "center"),
@@ -178,7 +180,7 @@ ui <- navbarPage(
                     column(width = 3,
                            textInput(inputId = "n_p2", label = "Participant 2?")),
                     column(width = 3,
-                           textInput(inputId = "n_p3", label = "Participant 3?"))
+                           textInput(inputId = "n_p3", label = "No participant 3", value = "Unknown"))
                   ),
                   fluidRow(
                     column(width = 3, p(questions["Domain"],
@@ -190,8 +192,8 @@ ui <- navbarPage(
                            selectInput(inputId = "n_dom_p2", label = "Participant 2?",
                                        choices = tax[["domain"]], multiple = T)),
                     column(width = 3,
-                           selectInput(inputId = "n_dom_p3", label = "Participant 3?",
-                                       choices = c(tax[["domain"]], "Unknown"), multiple = T))
+                           selectInput(inputId = "n_dom_p3", label = "No participant 3",
+                                       choices = c(tax[["domain"]], "Unknown"), multiple = T, selected = "Unknown"))
                   ),
                   fluidRow(
                     column(width = 3, p(questions["Cost"])),
@@ -202,7 +204,7 @@ ui <- navbarPage(
                            radioButtons(inputId = "n_cost_p2", label = "Participant 2?", inline = T,
                                         choices = rev.list(decoding[["binary"]]), selected = "Unknown")),
                     column(width = 3,
-                           radioButtons(inputId = "n_cost_p3", label = "Participant 3?", inline = T,
+                           radioButtons(inputId = "n_cost_p3", label = "No participant 3", inline = T,
                                         choices = rev.list(decoding[["binary"]]), selected = "Unknown"))
                   ),
                   fluidRow(
@@ -214,7 +216,7 @@ ui <- navbarPage(
                            selectInput(inputId = "n_outcome_p2", label = "Participant 2?",
                                        choices = rev.list(decoding[["ternary"]]), selected = "Unknown")),
                     column(width = 3,
-                           selectInput(inputId = "n_outcome_p3", label = "Participant 3?",
+                           selectInput(inputId = "n_outcome_p3", label = "No participant 3",
                                        choices = rev.list(decoding[["ternary"]]), selected = "Unknown"))
                   ),
                   h4("Taxonomy and specificity"),
@@ -227,13 +229,13 @@ ui <- navbarPage(
                            selectInput(inputId = "n_taxres_p2", label = "Participant 2?",
                                        choices = tax[["resolution"]], selected = "Species")),
                     column(width = 3,
-                           selectInput(inputId = "n_taxres_p3", label = "Participant 3?",
+                           selectInput(inputId = "n_taxres_p3", label = "No participant 3",
                                        choices = c(tax[["resolution"]], "Unknown"), selected = "Unknown"))
                   ),
                   fluidRow(
                     column(width = 3, p(questions["Specificity"])),
                     column(width = 4,
-                           radioButtons("n_specificity", label = NULL, inline = T,
+                           radioButtons(inputId = "n_specificity", label = NULL, inline = T,
                                         choices = rev.list(decoding[["binary"]]), selected = "Unknown")
                     )
                   ),
@@ -301,7 +303,7 @@ ui <- navbarPage(
                            radioButtons(inputId = "n_comp_nucleic", label = questions[["Nucleic_acids"]],
                                         choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T)),
                     column(width = 3,
-                           radioButtons(inputId = "n_comp_peptites", label = questions[["Peptides"]],
+                           radioButtons(inputId = "n_comp_peptides", label = questions[["Peptides"]],
                                         choices = rev.list(decoding[["binary"]]), selected = "Unknown", inline = T))
                   ),
                   fluidRow(
@@ -324,7 +326,8 @@ ui <- navbarPage(
                            textInput(inputId = "n_int_name", label = "Interaction name (pre-filled)")),
                     column(width = 4,
                            actionButton("n_render", "Generate the new entry", style = 'margin-top:31px'))
-                  )
+                  ),
+                  verbatimTextOutput("rendered_entry")
            )
   )
 )
@@ -486,7 +489,8 @@ server <- function(input, output, session) {
       )
     })
   })
-  # Change to detailed entry with button
+  # Navigation
+  #
   observeEvent(input$viewDetail, {
     updateNavbarPage(session = session, inputId = "navbar", selected = "detail")
   })
@@ -496,7 +500,11 @@ server <- function(input, output, session) {
   observeEvent(input$viewNewEntry, {
     updateNavbarPage(session = session, inputId = "navbar", selected = "new-mi-entry")
   })
+  #
+  # New entry
+  #
   output$min_int_no <- renderText({ nrow(mi_atlas)+1 })
+  # Better navigation buttons with updated informations
   observe({
     req(input$table_rows_selected)
     updateActionButton(session = session, inputId = "viewDetail",
@@ -505,9 +513,9 @@ server <- function(input, output, session) {
     updateTextInput(session, "n_int_name",
                     value = paste(input$n_p1, input$n_p2, sep = " - "))
   })
+  # Update form depending on change in participant number
   observeEvent(input$n_p_no, {
     if(input$n_p_no == 2){
-      showNotification("Two participants selected for new entry", type = "message")
       updateTextInput(session, "n_p3", value = "Unknown", label = "No participant 3")
       updateSelectInput(session, "n_dom_p3", selected = "Unknown", label = "No participant 3")
       updateRadioButtons(session, "n_cost_p3", selected = "Unknown", label = "No participant 3")
@@ -522,10 +530,113 @@ server <- function(input, output, session) {
       updateSelectInput(session, "n_taxres_p3", selected = "Species", label = "Participant 3?")
     }
   }, ignoreInit = T)
+  # Add more reference field if needed
+  #
   observeEvent(input$more_reference, {
     insertUI("#n_reference_1", where = "afterEnd",
-             ui = textInput(paste0("n_reference_", input$more_reference), "DOI of the article")
+             ui = textInput(paste0("n_reference_", input$more_reference+1), "DOI of the article")
     )
+  })
+  references <- reactive({
+    # At least one is required
+    req(input$n_reference_1)
+    # Fetch the references fields
+    #  based on https://stackoverflow.com/a/40045292
+    refs <- rev(sapply(grep("n_reference_", names(input), value = T), function(x) input[[x]]))
+    # Remove empty fields in case
+    refs <- refs[ refs != "" ]
+    # Paste together references fields
+    paste(refs, collapse = ";")
+  })
+  tax_resolution <- reactive({
+    req(input$n_taxres_p1, input$n_taxres_p2, input$n_taxres_p3)
+    tax <- c(input$n_taxres_p1, input$n_taxres_p2, input$n_taxres_p3)
+    # Lower case the 2nd and 3rd
+    tax[2:3] <- sapply(tax[2:3], tolower)
+    # Remove the 3rd field if no 3rd participant
+    if(input$n_p_no == 2){
+      tax <- tax[1:2]
+    }
+    # Paste together the taxonomic resolution
+    paste(tax, collapse = "-")
+  })
+  # List the necessary inputs following the columns of the atlas
+  atlas_fields <- reactive(
+    c(
+      input$n_int_name,
+      input$n_p1,
+      input$n_p2,
+      input$n_p3,
+      tax_resolution(),
+      input$n_dom_p1,
+      input$n_dom_p2,
+      input$n_dom_p3,
+      input$n_specificity,
+      input$n_cost_p1,
+      input$n_cost_p2,
+      input$n_cost_p3,
+      input$n_outcome_p1,
+      input$n_outcome_p2,
+      input$n_outcome_p3,
+      input$n_site_contact,
+      input$n_site_time,
+      input$n_site_space,
+      input$n_dep_cytoplasm,
+      input$n_dep_membrane,
+      input$n_dep_extracellular,
+      input$n_hab_aquatic,
+      input$n_hab_biofilm,
+      input$n_hab_food,
+      input$n_hab_host,
+      input$n_hab_soil,
+      input$n_hab_synthetic,
+      input$n_hab_ubiquitous,
+      input$n_comp_mol,
+      input$n_comp_nucleic,
+      input$n_comp_peptides,
+      input$n_comp_metabolites,
+      references())
+  )
+  #
+  # Format the new entry
+  #
+  show_entry <- eventReactive(input$n_render,{
+    req(atlas_fields)
+    # Fetch the inputs
+    fields <- setNames(atlas_fields(), colnames(mi_atlas))
+    # Replace Unknown by NA values
+    fields[ fields == "Unknown" ] <- NA
+    # Force integer values where necesary
+    integer_fields <- c("Specificity", "Cost_to_P1", "Cost_to_P2",
+                        "Cost_to_P3", "Outcome_for_P1", "Outcome_for_P2", 
+                        "Outcome_for_P3", "Contact_dependent", "Time_dependent",
+                        "Space_dependent", "Cytoplasm", "Membrane", "Extracellular",
+                        "Aquatic", "Biofilm", "Food_product", "Multicellular_host",
+                        "Soil", "Synthetic", "Ubiquitous", "Small_molecules",
+                        "Nucleic_acids", "Peptides", "Secondary_metabolites")
+    fields[integer_fields] <- lapply(fields[integer_fields], strtoi)
+    # Convert to data.frame
+    foo <- data.frame(as.list(fields))
+    # Add the proper row number for a new entry
+    rownames(foo) <- nrow(mi_atlas)+1
+    foo
+  })
+  output$rendered_entry <- renderPrint(
+    write.table(show_entry(), file = "", quote = T, col.names = F, sep = "\t")
+  )
+  # Form raw validation
+  #
+  observeEvent(input$n_render,{
+    lapply(c("n_p1","n_p2", "n_dom_p1", "n_dom_p2", "n_reference_1"), function(foo){
+      feedbackDanger(foo, input[[foo]] == "",
+                     "Mandatory fields")
+    })
+    if(input$n_p_no == 3){
+      lapply(c("n_p3", "n_dom_p3"), function(foo){
+        feedbackDanger(foo, input[[foo]] == "",
+                       "Mandatory fields")
+      })
+    }
   })
 }
 
