@@ -2,6 +2,7 @@ library(shiny)
 library(bslib)
 library(DT)
 library(shinyFeedback)
+library(rclipboard)
 
 # Resources to be loaded
 if(!exists("mi_atlas")){
@@ -161,6 +162,7 @@ ui <- navbarPage(
   ),
   tabPanel("Add an interaction", value = "new-mi-entry",
            useShinyFeedback(),
+           rclipboardSetup(),
            column(width = 8, offset = 2,
                   h2("Contribute to the catalog with a new microbial interaction", align = "center"),
                   fluidRow(
@@ -170,7 +172,8 @@ ui <- navbarPage(
                                tags$li("Fill the", a(href="#form","form"),"below"),
                                tags$li("Press the 'Generate the new entry'", a(href="#generate", "button")),
                                tags$li("Copy the encoded entry which is a new line of the tab-separated catalog"),
-                               tags$li(a(href="https://github.com/cpauvert/mi-atlas/blob/main/mi-atlas.tsv", "Edit"),
+                               tags$li(a(href="https://github.com/cpauvert/mi-atlas/edit/main/mi-atlas.tsv",
+                                         target = "_blank", rel = "noreferrer noopener", "Edit"),
                                        "the tab-separated catalog (",
                                        a(href="https://docs.github.com/en/github/managing-files-in-a-repository/managing-files-on-github/editing-files-in-another-users-repository",
                                          target = "_blank", rel = "noreferrer noopener", "how-to", .noWS = "before"), "if need be)"),
@@ -342,12 +345,16 @@ ui <- navbarPage(
                   h4("Build the new entry using the framework", id="generate"),
                   fluidRow(
                     column(width = 3, p("The new entry will be generated with the following name")),
-                    column(width = 4,
+                    column(width = 3,
                            textInput(inputId = "n_int_name", label = "Interaction name (pre-filled)")),
-                    column(width = 4,
+                    column(width = 6, align = "center",
                            actionButton("n_render", "Generate the new entry", style = 'margin-top:31px'))
                   ),
-                  verbatimTextOutput("rendered_entry")
+                  verbatimTextOutput("rendered_entry"),
+                  fluidRow(
+                    column(width = 6, uiOutput("clip"), align = "center"),
+                    column(width = 6, uiOutput("suggest"), align = "center")
+                  )
            )
   )
 )
@@ -639,10 +646,12 @@ server <- function(input, output, session) {
     foo <- data.frame(as.list(fields))
     # Add the proper row number for a new entry
     rownames(foo) <- nrow(mi_atlas)+1
-    foo
+    capture.output( # Capture the output to maintain table formatting
+      write.table(foo, file = "", quote = T, col.names = F, sep = "\t")
+    )
   })
   output$rendered_entry <- renderPrint(
-    write.table(show_entry(), file = "", quote = T, col.names = F, sep = "\t")
+    cat(show_entry()) # Proper render of the new encoded line
   )
   # Form raw validation
   #
@@ -658,6 +667,16 @@ server <- function(input, output, session) {
       })
     }
   })
+  # Add clipboard buttons
+  output$clip <- renderUI({
+    rclipButton("clipbtn", "Copy the new entry", show_entry(), icon("clipboard"))
+  })
+  suggest_link <- eventReactive(input$n_render,{
+    a(href="https://github.com/cpauvert/mi-atlas/edit/main/mi-atlas.tsv",
+      target = "_blank", rel = "noreferrer noopener", class = "btn btn-success",
+      "Suggest the new entry")
+  })
+  output$suggest <- renderUI(suggest_link())
 }
 
 # Run the application 
