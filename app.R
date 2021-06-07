@@ -474,68 +474,36 @@ server <- function(input, output, session) {
     }
     ptable
   }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
-  output$dependencies_table <- renderTable({
-    # This function should not be ran before a row is selected.
-    req(input$table_rows_selected)
-    # Assemble the table
-    dtable<-matrix(
-      data = unlist(selected_atlas()[c(
-        "Contact_dependent", "Time_dependent", "Space_dependent")]),
-      nrow = 3, ncol = 1, byrow = F)
-    # Add the questions as row.names
-    rownames(dtable) <- unlist(
-      unname(questions[c("Contact_dependent", "Time_dependent", "Space_dependent")])
-    )
-    colnames(dtable) <- "Dependencies"
-    dtable
-  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
-  output$site_table <- renderTable({
-    # This function should not be ran before a row is selected.
-    req(input$table_rows_selected)
-    # Assemble the table
-    stable<-matrix(
-      data = unlist(selected_atlas()[c(
-        "Cytoplasm", "Membrane", "Extracellular")]),
-      nrow = 3, ncol = 1, byrow = F)
-    # Add the questions as row.names
-    rownames(stable) <- unlist(
-      unname(questions[c("Cytoplasm", "Membrane", "Extracellular")])
-    )
-    colnames(stable) <- "Site"
-    stable
-  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
-  output$habitat_table <- renderTable({
-    # This function should not be ran before a row is selected.
-    req(input$table_rows_selected)
-    # Assemble the table
-    htable<-matrix(
-      data = unlist(selected_atlas()[c(
-        "Aquatic", "Biofilm", "Food_product",
-        "Multicellular_host", "Soil", "Synthetic", "Ubiquitous")]),
-      nrow = 7, ncol = 1, byrow = F)
-    # Add the questions as row.names
-    rownames(htable) <- unlist(
-      unname(questions[c("Aquatic", "Biofilm", "Food_product",
-                         "Multicellular_host", "Soil", "Synthetic", "Ubiquitous")])
-    )
-    colnames(htable) <- "Habitat"
-    htable
-  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
-  output$compounds_table <- renderTable({
-    # This function should not be ran before a row is selected.
-    req(input$table_rows_selected)
-    # Assemble the table
-    ctable<-matrix(
-      data = unlist(selected_atlas()[c(
-        "Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites")]),
-      nrow = 4, ncol = 1, byrow = F)
-    # Add the questions as row.names
-    rownames(ctable) <- unlist(
-      unname(questions[c("Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites")])
-    )
-    colnames(ctable) <- "Site"
-    ctable
-  }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  # Rendering function for tabulating attributes list
+  tabulate_attributes <- function(attribs, name){
+    renderTable({
+      # This function should not be ran before a row is selected.
+      req(input$table_rows_selected)
+      # Assemble the table
+      dtable<-matrix(
+        data = unlist(selected_atlas()[attribs]),
+        nrow = length(attribs), ncol = 1, byrow = F)
+      # Add the questions as row.names
+      rownames(dtable) <- unlist(
+        unname(questions[attribs])
+      )
+      colnames(dtable) <- name
+      dtable
+    }, rownames = T, colnames = F, na = "", hover = T, spacing = "xs")
+  }
+  output$dependencies_table <- tabulate_attributes(
+    c("Contact_dependent", "Time_dependent", "Space_dependent"),
+    "Dependencies")
+  output$site_table <- tabulate_attributes(
+    c("Cytoplasm", "Membrane", "Extracellular"),
+    "Site")
+  output$habitat_table <- tabulate_attributes(
+    c("Aquatic", "Biofilm", "Food_product",
+        "Multicellular_host", "Soil", "Synthetic", "Ubiquitous"),
+    "Habitat")
+  output$compounds_table <- tabulate_attributes(
+    c("Small_molecules", "Nucleic_acids", "Peptides", "Secondary_metabolites"),
+    "Site")
   output$references <- renderUI({
     # This function should not be ran before a row is selected.
     req(input$table_rows_selected)
