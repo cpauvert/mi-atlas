@@ -86,7 +86,7 @@ if(length(better_reference) != length(atlas_ref)){
   # Write the updated tsv
   write.table(
     data.frame(dois = names(new_references), references = new_references, stringsAsFactors = F),
-    "better_references.tsv", append = T,
+    "better-references.tsv", append = T, sep = "\t",
     row.names = F
     )
   # Update the named vector as well
