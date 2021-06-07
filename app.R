@@ -54,6 +54,44 @@ if(!exists("tax")){
     "resolution" = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
   )
 }
+#
+# List of formatted references associated to dois
+if(!exists("better_reference")){
+  better_reference <- read.table("better-references.tsv", header = TRUE, sep = "\t",
+                                 stringsAsFactors = FALSE)
+  better_reference <- setNames(better_reference$references, better_reference$dois)
+}
+# Check that the list of references is complete
+atlas_ref <- unique(unlist(strsplit(mi_atlas$References, ";")))
+# Otherwise fetch the missing references and write to file
+if(length(better_reference) != length(atlas_ref)){
+  require(rcrossref)
+  # Extract the missing references
+  missing_references <- setdiff(atlas_ref, better_reference)
+  # Check the proper formatting of dois
+  unformatted_dois_index <- grep("^10\\.", missing_references,invert = T)
+  ## if not, extract the ill-formatted as is.
+  unformatted_references <- setNames(nm = missing_references[unformatted_dois_index])
+  ## and remove them from the pool to be fetched
+  missing_references <- missing_references[ -unformatted_dois_index ]
+  # Fetch the references with rcrossref
+  format_references <- cr_cn(missing_references,
+                             format = "text",
+                             style = "elsevier-harvard",
+                             locale = "en-UK")
+  # As named vector instead of lists
+  names(format_references)<-missing_references
+  # Add the unformatted references
+  new_references <- unlist(c(format_references, unformatted_references))
+  # Write the updated tsv
+  write.table(
+    data.frame(dois = names(new_references), references = new_references, stringsAsFactors = F),
+    "better_references.tsv", append = T,
+    row.names = F
+    )
+  # Update the named vector as well
+  better_reference <- unlist(c(better_reference, new_references))
+}
 
 # Define UI
 ui <- navbarPage(
@@ -508,6 +546,7 @@ server <- function(input, output, session) {
     # Format the links
     lapply(refs, function(reference){
       tags$li(
+        better_reference[[ reference ]],
         tags$a(
           href=paste0("https://doi.org/", reference),
           target = "_blank", rel = "noreferrer noopener",
