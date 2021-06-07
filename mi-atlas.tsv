@@ -73,3 +73,4 @@
 "72"	"Vibrio - Salpingoeca"	"Vibrio fischeri"	"Salpingoeca rosetta"	NA	"Species-species"	"Bacteria"	"Eukarya"	NA	1	1	NA	NA	NA	1	NA	0	0	1	0	0	1	1	0	0	0	0	0	0	0	0	1	0	"10.1016/j.cell.2017.08.005"
 "73"	"Vibrio - Vibrio"	"Vibrio sp. strain V0304, donor"	"Vibrio sp. strain V0304, recipient"	NA	"Species-species"	"Bacteria"	"Bacteria"	NA	1	1	1	NA	1	1	NA	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	0	1	"10.1128/aem.67.4.1710-1717.2001;10.1016/j.bjm.2016.10.005"
 "74"	"Zygotorulaspora - Lactobacillus"	"Zygotorulaspora florentina"	"Lactobacillus nagelii"	NA	"Species-species"	"Eukarya"	"Bacteria"	NA	1	1	1	NA	0	1	NA	0	0	0	0	0	1	0	0	1	0	0	0	0	0	0	1	0	"10.1016/j.fm.2013.03.009;10.1039/c8np00009c"
+"75"	"Erysiphe - Ampelomyces"	"Erysiphe necator"	"Ampelomyces quisqualis"	NA	"Species-species"	"Eukarya"	"Eukarya"	NA	NA	0	NA	NA	-1	NA	NA	NA	0	NA	NA	NA	NA	0	0	1	1	NA	0	0	NA	NA	NA	NA	"10.1046/j.1469-8137.1998.00316.x;10.1094/PHYTO-01-19-0013-R"
