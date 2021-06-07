@@ -5,9 +5,9 @@ account: cpauvert
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4199659
-bundleId: 4650942
+bundleId: 4687665
 url: https://cpauvert.shinyapps.io/mi-atlas/
-when: 1622206956.93231
+when: 1623072570.18098
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .gitmodules|columns-mi-atlas.tsv|CONTRIBUTING.md|LICENSE|README.md|docs
+ignoredFiles: .gitmodules|columns-mi-atlas.tsv|CONTRIBUTING.md|LICENSE|README.md|www/logo.png
