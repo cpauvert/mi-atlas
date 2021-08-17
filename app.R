@@ -103,7 +103,10 @@ ui <- navbarPage(
     primary = "#5b9dd9",#"#a5c9ea",
     base_font = font_google("Source Sans Pro"),
     code_font = font_google("Source Code Pro")
-  ),
+  ) %>%
+    bs_add_rules(
+      ':target:before { content: "";  display: block;  height: 80px;  margin: -80px 0 0;}'
+    ),
   position = "fixed-top",
   footer = list(
     column(hr(),
@@ -155,7 +158,7 @@ ui <- navbarPage(
                   ),
                   br(),
                   column(width = 12, align = "center",
-                         actionButton(inputId = "viewDetail",
+                         actionButton(inputId = "viewDetail", class = "go-to-top",
                                       "View detailed entry of the interaction",
                                       width = "250px")
                   )
@@ -189,11 +192,11 @@ ui <- navbarPage(
            br(),
            fluidRow(
              column(width = 4, offset = 2, align = "center",
-                    actionButton(inputId = "viewCatalog",
+                    actionButton(inputId = "viewCatalog", class = "go-to-top",
                                  "Explore another entry in the catalog of interactions",
                                  width = "250px")),
              column(width = 4, align = "center",
-                    actionButton(inputId = "viewNewEntry",
+                    actionButton(inputId = "viewNewEntry", class = "go-to-top",
                                  "Suggest a new interaction for the catalog",
                                  width = "250px"))
            )
@@ -393,7 +396,12 @@ ui <- navbarPage(
                     column(width = 6, uiOutput("clip"), align = "center"),
                     column(width = 6, uiOutput("suggest"), align = "center")
                   )
-           )
+           ),
+           tags$script("$(document).ready(function () {
+                                  $('.go-to-top, .shiny-tab-input').on('click', function (e) {
+                                    window.scrollTo(0, 0)
+                                  });
+                              });")
   )
 )
 
