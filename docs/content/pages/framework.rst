@@ -8,6 +8,7 @@ A framework to describe microbial interactions
 .. figure:: {static}/extra/framework-abstract.png
     :alt: A graphical abstract illustrating the encoding process
     :align: center
+    :width: 100%
 
     From a microbial interaction (left) between two bacteria (green and blue), questions (center) are asked within the framework to help encode the interaction into a set of binary attributes and further stored in the catalog (right).
 
